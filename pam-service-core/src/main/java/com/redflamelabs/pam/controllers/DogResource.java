@@ -5,10 +5,7 @@ import com.redflamelabs.pam.repositories.DogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller for handling requests for dogs
@@ -21,16 +18,26 @@ public class DogResource {
 
     @Autowired
     private DogRepository dogRepository;
-    
+
+    /**
+     * Method: createDog
+     * @param dogModel
+     * @return
+     */
     @RequestMapping(value = "/", method = RequestMethod.POST)
     ResponseEntity<DogModel> createDog(@RequestBody DogModel dogModel) {
-        DogModel successModel = dogRepository.save(dogModel);
-        return new ResponseEntity<>(successModel, HttpStatus.OK);
+        DogModel dog = dogRepository.save(dogModel);
+        return new ResponseEntity<>(dog, HttpStatus.OK);
     }
 
+    /**
+     * Method: findDogByName
+     * @param dogName
+     * @return
+     */
     @RequestMapping(value = "/findByName", method = RequestMethod.GET)
-    ResponseEntity<Iterable<DogModel>> findDogByName(String name) {
-        Iterable<DogModel> dogs = dogRepository.findByName(name);
+    ResponseEntity<Iterable<DogModel>> findDogByName(@RequestParam("name") String dogName) {
+        Iterable<DogModel> dogs = dogRepository.findByName(dogName);
         return new ResponseEntity<>(dogs, HttpStatus.OK);
     }
 }
